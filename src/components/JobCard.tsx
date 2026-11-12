@@ -1,5 +1,6 @@
 import { STATUSES, type Job, type Status } from "../store/types";
 import { jobStatus } from "../store/reducer";
+import { jobSource, sourceClass } from "../utils/source";
 
 interface Props {
   job: Job;
@@ -15,6 +16,7 @@ export function fmtDate(d?: string) {
 
 export function JobCard({ job, onStatus, onRemove }: Props) {
   const status = jobStatus(job);
+  const source = jobSource(job);
   const statusId = `status-${job.id}`;
   return (
     <article className={"job" + (job.applied ? " applied" : "")} aria-label={`${job.title} at ${job.company}`}>
@@ -37,7 +39,13 @@ export function JobCard({ job, onStatus, onRemove }: Props) {
           {job.salary && <span className="sal">💰 {job.salary}</span>}
         </div>
       </div>
-      <span className={"badge " + job.match}>{job.match} match</span>
+      <div className="tags">
+        <span className={"badge " + job.match}>{job.match} match</span>
+        <span className={"src src-" + sourceClass(source)} title={`Found on ${source}`}>
+          <span className="sr-only">Source: </span>
+          {source}
+        </span>
+      </div>
       {(job.fit || job.gaps) && (
         <div className="notes">
           <div className="fit">

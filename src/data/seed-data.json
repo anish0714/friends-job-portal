@@ -602,7 +602,7 @@
           "location": "Waterloo, ON (Hybrid)",
           "posted": "2026-11-09",
           "salary": null,
-          "fit": "Spring Boot REST APIs + microservices, 8+ yrs; Azure/AWS and Docker are nice-to-haves (via Indeed)",
+          "fit": "Spring Boot REST APIs + microservices, 8+ yrs; Azure/AWS and Docker are nice-to-haves",
           "gaps": "12-month contract, 4 days onsite; SQL Server-heavy; same client role as Akkodis posting",
           "url": "https://to.indeed.com/aansrjthmm2q",
           "applied": false
@@ -615,7 +615,7 @@
           "location": "Toronto, ON",
           "posted": "2026-11-12",
           "salary": null,
-          "fit": "Tech lead on Java/Spring Boot + React microservices, Azure, Jenkins, Docker; 8+ yrs (via Indeed)",
+          "fit": "Tech lead on Java/Spring Boot + React microservices, Azure, Jenkins, Docker; 8+ yrs",
           "gaps": "Wealth domain; Node.js/Next.js, Kafka, GCP",
           "url": "https://to.indeed.com/aadpldb497bl",
           "applied": false
@@ -628,7 +628,7 @@
           "location": "Waterloo, ON (Onsite)",
           "posted": "2026-11-03",
           "salary": "$100,000 – $145,000",
-          "fit": "Java/Spring Boot services on AWS + React; owns architecture decisions (via Indeed)",
+          "fit": "Java/Spring Boot services on AWS + React; owns architecture decisions",
           "gaps": "React Native, Next.js, PostgreSQL; healthcare data",
           "url": "https://to.indeed.com/aaqd4b6wp7rc",
           "applied": false
@@ -641,7 +641,7 @@
           "location": "Toronto, ON (Hybrid)",
           "posted": "2026-10-13",
           "salary": "$100,000 – $142,000",
-          "fit": "Java back end + React, Azure/AWS, enterprise integrations, Agile; 7+ yrs (via Indeed)",
+          "fit": "Java back end + React, Azure/AWS, enterprise integrations, Agile; 7+ yrs",
           "gaps": "Payments; Terraform/IaC and GenAI",
           "url": "https://to.indeed.com/aafnbp7crk9k",
           "applied": false
@@ -654,7 +654,7 @@
           "location": "Toronto, ON (Onsite)",
           "posted": "2026-11-02",
           "salary": "$56,700 – $157,000",
-          "fit": "Lead Java microservices + REST APIs, CI/CD, Agile; AWS preferred (via Indeed)",
+          "fit": "Lead Java microservices + REST APIs, CI/CD, Agile; AWS preferred",
           "gaps": "Contract; in person; very wide pay range",
           "url": "https://to.indeed.com/aah6ccggmlc4",
           "applied": false
@@ -667,7 +667,7 @@
           "location": "Toronto, ON (Hybrid)",
           "posted": "2026-11-03",
           "salary": "$45 – $50 / hour",
-          "fit": "Java/Spring Boot microservices on AWS/Azure, Docker, CI/CD (via Indeed)",
+          "fit": "Java/Spring Boot microservices on AWS/Azure, Docker, CI/CD",
           "gaps": "Contract rate well below their level; Kubernetes",
           "url": "https://to.indeed.com/aa87rxtp8hnh",
           "applied": false
@@ -680,7 +680,7 @@
           "location": "Mississauga, ON",
           "posted": "2026-11-04",
           "salary": "$130,100 – $162,600",
-          "fit": "Java + React, matches their stack; salary in range for 13+ yrs (via Eluta)",
+          "fit": "Java + React, matches their stack; salary in range for 13+ yrs",
           "gaps": "Healthcare SaaS domain; full description not checked",
           "url": "https://www.eluta.ca/spl/senior-software-engineer-java-react-f66974a9d766cec228dbff318073a30e",
           "applied": false
@@ -693,7 +693,7 @@
           "location": "Mississauga, ON",
           "posted": "2026-11-05",
           "salary": "$120,800 – $170,800",
-          "fit": "Senior Java/Spring Boot role at VP level (via Eluta)",
+          "fit": "Senior Java/Spring Boot role at VP level",
           "gaps": "Banking; full description not checked",
           "url": "https://www.eluta.ca/spl/java-spring-boot-developer-vice-president-eebab63c7f9ac305fd0ec49d460df122",
           "applied": false
@@ -706,7 +706,7 @@
           "location": "Toronto, ON",
           "posted": "2026-11-06",
           "salary": "$120,800 – $170,800",
-          "fit": "Lead Java role in Toronto at VP level (via Eluta)",
+          "fit": "Lead Java role in Toronto at VP level",
           "gaps": "Banking; full description not checked",
           "url": "https://www.eluta.ca/spl/lead-java-developer-vice-president-dd2a1002509ca0cacb425a74eed4c81a",
           "applied": false
@@ -719,7 +719,7 @@
           "location": "Mississauga, ON",
           "posted": "2026-11-08",
           "salary": "$120,800 – $170,800",
-          "fit": "Leads design and delivery of scalable enterprise apps and mentors engineers (via Eluta)",
+          "fit": "Leads design and delivery of scalable enterprise apps and mentors engineers",
           "gaps": "Banking; Citi has several similar VP postings",
           "url": "https://www.eluta.ca/spl/senior-java-developer-vice-president-704f3c109eff7c45a1486e83f7a6cb03",
           "applied": false
@@ -732,7 +732,7 @@
           "location": "Mississauga, ON",
           "posted": "2026-11-06",
           "salary": null,
-          "fit": "Tech lead on Java 17 + Spring Boot REST APIs (via Eluta)",
+          "fit": "Tech lead on Java 17 + Spring Boot REST APIs",
           "gaps": "Spring WebFlux, Kafka and IBM MQ; consulting vendor",
           "url": "https://www.eluta.ca/spl/senior-java-technical-lead-restful-api-spring-boot-e9aa14e08336dd7a4876449a9156a5d4",
           "applied": false
@@ -745,7 +745,7 @@
           "location": "Toronto, ON",
           "posted": "2026-11-02",
           "salary": "$95,000 – $145,000",
-          "fit": "Lead full-stack Java role (via Eluta)",
+          "fit": "Lead full-stack Java role",
           "gaps": "Consulting vendor; full description not checked",
           "url": "https://www.eluta.ca/spl/java-full-stack-development-lead-5abec47cdfdb3b57ca2be6c0b3e7c2b1",
           "applied": false
@@ -758,7 +758,7 @@
           "location": "Toronto, ON",
           "posted": "2026-11-02",
           "salary": "$95,000 – $145,000",
-          "fit": "Senior Java role; CGI has 4 matching postings (via Eluta)",
+          "fit": "Senior Java role; CGI has 4 matching postings",
           "gaps": "Consulting vendor; full description not checked",
           "url": "https://www.eluta.ca/spl/senior-java-developer-dc64e25b3bf9cd88b2ae7b89e3832613",
           "applied": false
@@ -770,7 +770,7 @@
           "company": "Accenture",
           "location": "Mississauga, ON",
           "salary": "$99,450 – $209,900",
-          "fit": "Lead full-stack Java role at a firm that also runs SAP Commerce work (via Eluta)",
+          "fit": "Lead full-stack Java role at a firm that also runs SAP Commerce work",
           "gaps": "Posted 14+ days ago; consulting travel possible",
           "url": "https://www.eluta.ca/spl/java-full-stack-lead-5bc45aead53421334421786448efe44a",
           "applied": false
@@ -783,7 +783,7 @@
           "location": "Waterloo, ON",
           "posted": "2026-11-12",
           "salary": "$168,000",
-          "fit": "Lead developer at a large Waterloo software company; strong salary (via Eluta)",
+          "fit": "Lead developer at a large Waterloo software company; strong salary",
           "gaps": "Tech stack not confirmed; Waterloo commute",
           "url": "https://www.eluta.ca/spl/lead-software-developer-2881f442139a41310ca67408b8f92e66",
           "applied": false
@@ -795,7 +795,7 @@
           "company": "OpenText",
           "location": "Waterloo, ON",
           "salary": "$147,120",
-          "fit": "Senior developer role with a strong salary (via Eluta)",
+          "fit": "Senior developer role with a strong salary",
           "gaps": "Tech stack not confirmed; posted 14+ days ago",
           "url": "https://www.eluta.ca/spl/sr-software-developer-2d6270d9491974b05fad9f92dedbc2b4",
           "applied": false

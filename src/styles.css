@@ -124,6 +124,24 @@ a { color: var(--accent); }
 .badge.Strong { color: var(--strong); background: var(--strong-bg); }
 .badge.Good { color: var(--good); background: var(--good-bg); }
 .badge.Stretch { color: var(--stretch); background: var(--stretch-bg); }
+.tags { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+/* Source tag: neutral pill (text keeps full contrast) with a brand-coloured dot. */
+.src { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 2px 9px;
+  border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); white-space: nowrap; }
+.src::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--src, var(--muted)); flex: none; }
+.src-linkedin { --src: #0a66c2; }
+.src-indeed { --src: #2557a7; }
+.src-eluta { --src: #e0611f; }
+.src-glassdoor { --src: #0caa41; }
+.src-job-bank { --src: #af3c43; }
+.src-company-site { --src: #7c5cbf; }
+.src-referral { --src: #c28a00; }
+@media (prefers-color-scheme: dark) {
+  .src-linkedin { --src: #5aa9ff; }
+  .src-indeed { --src: #7aa2f7; }
+  .src-job-bank { --src: #f08a90; }
+  .src-company-site { --src: #b39cf0; }
+}
 .notes { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; }
 .notes div { line-height: 1.45; }
 .fit .lbl { color: var(--strong); }
@@ -177,6 +195,6 @@ footer { margin-top: 28px; font-size: 12px; color: var(--muted); line-height: 1.
   .side { padding: 18px 16px; }
   .notes { grid-template-columns: 1fr; }
   .job { grid-template-columns: 1fr; }
-  .badge { justify-self: start; }
+  .tags { flex-direction: row; align-items: center; justify-self: start; flex-wrap: wrap; }
   .controls select { flex: 1 1 auto; }
 }

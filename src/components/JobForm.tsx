@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from "react";
-import { MATCHES, type JobInput, type Match } from "../store/types";
+import { MATCHES, SOURCES, type JobInput, type Match, type Source } from "../store/types";
 import { extractLinkedInJobId, linkedInJobUrl } from "../utils/linkedin";
+import { detectSource } from "../utils/source";
 
 interface Props {
   onSave: (j: JobInput) => void;
@@ -17,6 +18,7 @@ export function JobForm({ onSave, onCancel }: Props) {
     url: "",
     salary: "",
     match: "Good" as Match,
+    source: "" as Source | "", // "" = work it out from the link
     fit: "",
     gaps: "",
     posted: today(),
@@ -25,6 +27,7 @@ export function JobForm({ onSave, onCancel }: Props) {
     setJ({ ...j, [k]: e.target.value });
 
   const linkedInId = extractLinkedInJobId(j.url);
+  const detected = detectSource(j.url);
 
   return (
     <form
@@ -41,6 +44,7 @@ export function JobForm({ onSave, onCancel }: Props) {
           url: linkedInId ? linkedInJobUrl(linkedInId) : j.url.trim() || undefined,
           salary: j.salary.trim() || null,
           match: j.match,
+          source: j.source || detected,
           fit: j.fit.trim() || undefined,
           gaps: j.gaps.trim() || undefined,
         });
@@ -96,6 +100,17 @@ export function JobForm({ onSave, onCancel }: Props) {
           </select>
         </label>
       </div>
+      <label>
+        Source
+        <select value={j.source} onChange={set("source")}>
+          <option value="">{detected ? `${detected} (from the link)` : "Detect from the link (Other if unknown)"}</option>
+          {SOURCES.map(s => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+      </label>
       <label>
         Why it fits
         <textarea rows={2} value={j.fit} onChange={set("fit")} />

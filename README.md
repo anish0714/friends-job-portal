@@ -16,8 +16,9 @@ leaves your machine unless you export it.
 - Job cards with match badge, fit and gap notes, status pipeline dropdown and posting link
 - Search, Strong/Good/Stretch filter chips, sort and "Hide applied"
 - Add a job by pasting a LinkedIn URL: the job id is pulled out and the link is normalised
+- Source tag on every job (LinkedIn, Indeed, Eluta, Glassdoor, Job Bank, Company site, Referral, Other), detected from the link or picked by hand, with a "filter by source" dropdown
 - Export everything as JSON; import a JSON backup or a CSV of jobs
-  (`title, company, location, posted, salary, url, match, fit, gaps`)
+  (`title, company, location, posted, salary, url, match, fit, gaps`, plus an optional `source`)
 - Light and dark themes, keyboard-friendly modals (Esc to close, focus trapped), works at 375px wide
 
 ## Development

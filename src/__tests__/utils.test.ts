@@ -1,6 +1,48 @@
 import { describe, expect, it } from "vitest";
 import { extractLinkedInJobId, linkedInSearchUrl, normalizeJobUrl } from "../utils/linkedin";
 import { csvToJobs, parseCsv } from "../utils/csv";
+import { detectSource, jobSource, parseSource } from "../utils/source";
+import { sourceCounts } from "../utils/filterSort";
+import { seedState } from "../store/storage";
+
+describe("source", () => {
+  it("detects the job site from the link", () => {
+    expect(detectSource("https://www.linkedin.com/jobs/view/4477605013")).toBe("LinkedIn");
+    expect(detectSource("https://ca.linkedin.com/jobs/view/x-123")).toBe("LinkedIn");
+    expect(detectSource("https://to.indeed.com/aansrjthmm2q")).toBe("Indeed");
+    expect(detectSource("https://ca.indeed.com/viewjob?jk=abc")).toBe("Indeed");
+    expect(detectSource("https://www.eluta.ca/spl/some-job-123")).toBe("Eluta");
+    expect(detectSource("https://www.glassdoor.ca/job-listing/x")).toBe("Glassdoor");
+    expect(detectSource("https://www.jobbank.gc.ca/jobsearch/jobposting/1")).toBe("Job Bank");
+    expect(detectSource("https://careers.example.com/job/1")).toBeUndefined();
+    expect(detectSource("https://notlinkedin.com/jobs")).toBeUndefined();
+    expect(detectSource("not a url")).toBeUndefined();
+    expect(detectSource(undefined)).toBeUndefined();
+  });
+
+  it("prefers a saved source, then the link, then Other", () => {
+    expect(jobSource({ source: "Referral", url: "https://www.linkedin.com/jobs/view/1" })).toBe("Referral");
+    expect(jobSource({ url: "https://www.linkedin.com/jobs/view/1" })).toBe("LinkedIn");
+    expect(jobSource({ url: "https://careers.example.com/1" })).toBe("Other");
+    expect(jobSource({})).toBe("Other");
+  });
+
+  it("reads typed source names", () => {
+    expect(parseSource("linkedin")).toBe("LinkedIn");
+    expect(parseSource(" Job bank ")).toBe("Job Bank");
+    expect(parseSource("company site")).toBe("Company site");
+    expect(parseSource("Monster")).toBe("Other");
+    expect(parseSource("")).toBeUndefined();
+  });
+
+  it("counts the seed jobs by source", () => {
+    expect(sourceCounts(seedState().friends[0].jobs)).toEqual([
+      { source: "LinkedIn", count: 45 },
+      { source: "Indeed", count: 6 },
+      { source: "Eluta", count: 10 },
+    ]);
+  });
+});
 
 describe("linkedin", () => {
   it("extracts job ids from common LinkedIn URL shapes", () => {
