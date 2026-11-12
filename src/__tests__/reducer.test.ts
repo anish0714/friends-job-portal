@@ -1,7 +1,40 @@
 import { describe, expect, it } from "vitest";
 import { reducer } from "../store/reducer";
-import { seedState } from "../store/storage";
+import { loadState, mergeSeed, saveState, seedState, SEED_VERSION, STORE_KEY } from "../store/storage";
 import type { AppState } from "../store/types";
+
+describe("seed merge for returning visitors", () => {
+  it("adds new seed jobs without touching saved jobs or statuses", () => {
+    const seed = seedState();
+    const saved: AppState = {
+      ...seed,
+      friends: seed.friends.map(f => ({
+        ...f,
+        searchedOn: "2026-01-01",
+        jobs: f.jobs.slice(0, 5).map((j, i) => (i === 0 ? { ...j, status: "Interview" as const, applied: true } : j)),
+      })),
+    };
+    const merged = mergeSeed(saved, seed);
+    const jobs = merged.friends[0].jobs;
+    expect(jobs).toHaveLength(seed.friends[0].jobs.length);
+    expect(jobs[0]).toMatchObject({ status: "Interview", applied: true });
+    expect(merged.friends[0].searchedOn).toBe(seed.friends[0].searchedOn);
+  });
+
+  it("does not bring back a friend the user removed", () => {
+    expect(mergeSeed({ friends: [] }).friends).toEqual([]);
+  });
+
+  it("merges on load only when the saved seed version is older", () => {
+    const seed = seedState();
+    const trimmed = { ...seed, friends: seed.friends.map(f => ({ ...f, jobs: f.jobs.slice(0, 3) })) };
+    localStorage.setItem(STORE_KEY, JSON.stringify({ ...trimmed, seedVersion: SEED_VERSION - 1 }));
+    expect(loadState().friends[0].jobs).toHaveLength(seed.friends[0].jobs.length);
+
+    saveState(trimmed);
+    expect(loadState().friends[0].jobs).toHaveLength(3);
+  });
+});
 
 const empty: AppState = { friends: [] };
 
@@ -69,14 +102,14 @@ describe("reducer: jobs", () => {
 });
 
 describe("seed data", () => {
-  it("has Friend #1 with 30 jobs: 10 Strong, 15 Good, 5 Stretch", () => {
+  it("has Friend #1 with 51 jobs: 12 Strong, 32 Good, 7 Stretch", () => {
     const s = seedState();
     expect(s.friends[0].name).toBe("Friend #1");
     const jobs = s.friends[0].jobs;
-    expect(jobs).toHaveLength(30);
-    expect(jobs.filter(j => j.match === "Strong")).toHaveLength(10);
-    expect(jobs.filter(j => j.match === "Good")).toHaveLength(15);
-    expect(jobs.filter(j => j.match === "Stretch")).toHaveLength(5);
+    expect(jobs).toHaveLength(51);
+    expect(jobs.filter(j => j.match === "Strong")).toHaveLength(12);
+    expect(jobs.filter(j => j.match === "Good")).toHaveLength(32);
+    expect(jobs.filter(j => j.match === "Stretch")).toHaveLength(7);
     expect(jobs.every(j => j.status === "Saved")).toBe(true);
   });
 });
