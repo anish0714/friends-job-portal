@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Friends Job Help Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1b1f24; --muted: #5f6b7a; --line: #e3e7ec;
+    --accent: #0a66c2; --strong: #1f8a4c; --strong-bg: #e3f4ea; --good: #1d5fbf; --good-bg: #e4eefc;
+    --stretch: #6b7280; --stretch-bg: #eef0f3; --warn: #a15c00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111418; --card: #1a1f25; --text: #e8ebef; --muted: #9aa5b1; --line: #2b323a;
+      --accent: #5aa9ff; --strong: #5fd394; --strong-bg: #1c3427; --good: #8bb8ff; --good-bg: #1d2a40;
+      --stretch: #b3bac4; --stretch-bg: #262b31; --warn: #f0b35c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  header h1 { font-size: 26px; margin: 0 0 4px; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 22px 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .stat b { display: block; font-size: 24px; }
+  .stat span { color: var(--muted); font-size: 13px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .controls input[type=search], .controls select {
+    font: inherit; font-size: 14px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--text);
+  }
+  .controls input[type=search] { flex: 1 1 260px; }
+  .chips { display: flex; gap: 6px; }
+  .chip { font: inherit; font-size: 13px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--card); color: var(--text); cursor: pointer; }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .toggle { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; cursor: pointer; }
+  .list { display: grid; gap: 12px; }
+  .job { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+    display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; }
+  .job.applied { opacity: .6; }
+  .job h3 { margin: 0; font-size: 16px; }
+  .job h3 a { color: var(--text); text-decoration: none; }
+  .job h3 a:hover { color: var(--accent); text-decoration: underline; }
+  .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 4px; }
+  .meta .sal { color: var(--text); font-weight: 600; }
+  .badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; height: fit-content; }
+  .badge.Strong { color: var(--strong); background: var(--strong-bg); }
+  .badge.Good { color: var(--good); background: var(--good-bg); }
+  .badge.Stretch { color: var(--stretch); background: var(--stretch-bg); }
+  .notes { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; }
+  .notes div { line-height: 1.45; }
+  .notes .lbl { font-weight: 600; display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+  .fit .lbl { color: var(--strong); }
+  .gap .lbl { color: var(--warn); }
+  .actions { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    border-top: 1px solid var(--line); padding-top: 10px; }
+  .btn { font: inherit; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 8px; text-decoration: none;
+    border: 1px solid var(--accent); color: #fff; background: var(--accent); cursor: pointer; }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .empty { text-align: center; color: var(--muted); padding: 40px; }
+  footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
+  @media (max-width: 640px) { .notes { grid-template-columns: 1fr; } .job { grid-template-columns: 1fr; } }
+
+  .shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+  .side { background: var(--card); border-right: 1px solid var(--line); padding: 22px 16px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .brand { font-weight: 700; font-size: 18px; }
+  .side-sub { color: var(--muted); font-size: 13px; margin: 4px 0 18px; }
+  .friends { display: grid; gap: 6px; margin-bottom: 14px; }
+  .friend { display: flex; gap: 10px; align-items: center; text-align: left; font: inherit; color: var(--text);
+    background: transparent; border: 1px solid transparent; border-radius: 10px; padding: 8px; cursor: pointer; }
+  .friend:hover { background: var(--bg); }
+  .friend.on { background: var(--bg); border-color: var(--line); }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 700; flex: none; }
+  .fmeta { display: flex; flex-direction: column; min-width: 0; }
+  .fmeta b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fmeta small { color: var(--muted); font-size: 12px; }
+  .btn.full { width: 100%; }
+  .btn.small { padding: 5px 10px; font-size: 12px; }
+  .btn.danger { background: #c62828; border-color: #c62828; }
+  .top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  .top h1 { font-size: 26px; margin: 0 0 4px; }
+  .top p { margin: 0; color: var(--muted); font-size: 14px; }
+  .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .skills span { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; padding: 16px; z-index: 10; }
+  .modal { background: var(--card); color: var(--text); border-radius: 14px; padding: 20px; width: min(560px, 100%); max-height: 90vh; overflow-y: auto; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .modal-head h2 { margin: 0; font-size: 18px; }
+  .x { font-size: 22px; background: none; border: none; color: var(--muted); cursor: pointer; }
+  .form { display: grid; gap: 12px; }
+  .form label { display: grid; gap: 4px; font-size: 13px; font-weight: 500; }
+  .form input, .form textarea, .form select { font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+  .linkbtn { background: none; border: none; color: #c62828; font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; }
+  @media (max-width: 800px) { .shell { grid-template-columns: 1fr; } .side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); } .row2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useEffect } = React;
+
+const SEED_JOBS = [
+  { id: "4477605013", match: "Strong", title: "Solutions Architect", company: "Canadian Tire Corporation", location: "Toronto, ON", posted: "2026-11-05", salary: null, fit: "Friend's former employer (3 yrs on CTC's SAP Commerce sites). E-commerce + order fulfilment architecture on Azure, 7+ yrs", gaps: "Architect title – pitch CCv2/microservices architecture work" },
+  { id: "4484483541", match: "Strong", title: "Senior Front-End Developer – SAP Composable Storefront (Spartacus)", company: "Future Electronics", location: "Toronto, ON (Hybrid)", posted: "2026-10-28", salary: null, fit: "Integrates with SAP Commerce Cloud OCC APIs; cart, checkout, account flows – core domain", gaps: "Front-end/Angular heavy; friend is mostly back-end" },
+  { id: "4482952448", match: "Strong", title: "Commerce Functional Lead", company: "Accenture", location: "Toronto, ON", posted: "2026-10-26", salary: "$108,800 – $220,400", fit: "Lists SAP Commerce (Hybris) explicitly; 5+ yrs commerce, leading teams, Agile", gaps: "Functional/consulting role rather than hands-on coding" },
+  { id: "4483163594", match: "Strong", title: "Software Engineer III, Supplier Advertising", company: "Wayfair", location: "Toronto, ON (Hybrid)", posted: "2026-10-23", salary: "CA$192,047 – $211,914", fit: "E-commerce retailer; Java + Spring Boot microservices, Azure/AWS, Docker, React, Agile; 6+ yrs", gaps: "Uses GCP, GraphQL, Kafka, Kubernetes" },
+  { id: "4489039147", match: "Strong", title: "Senior Java Full Stack Developer – Spring Boot, Angular & Azure", company: "ThoughtStorm", location: "Toronto, ON", posted: "2026-11-11", salary: null, fit: "Spring Boot microservices on Azure, Docker, React – matches current stack; 8+ yrs", gaps: "Contract; Angular + Kubernetes" },
+  { id: "4448487756", match: "Strong", title: "Senior Java Developer", company: "CGI", location: "Toronto, ON (Hybrid)", posted: "2026-11-01", salary: "$95,000 – $145,000", fit: "Spring Boot, microservices, Jenkins, React, Agile; ~10 yrs experience asked", gaps: "Kafka, Angular" },
+  { id: "4487982306", match: "Strong", title: "Senior Software Developer", company: "Interac Corp.", location: "Toronto, ON (Hybrid)", posted: "2026-11-10", salary: "$120,000 – $150,000", fit: "Spring Boot microservices, Docker, tech leadership; 7+ yrs", gaps: "Payments domain; Kubernetes" },
+  { id: "4480275484", match: "Strong", title: "Senior Developer", company: "Scotiabank", location: "Toronto, ON", posted: "2026-11-10", salary: null, fit: "Spring Boot microservices on Azure, Docker, Agile, lead duties; 6+ yrs", gaps: "Banking; Kafka + Kubernetes" },
+  { id: "4486922433", match: "Strong", title: "Lead Java Developer", company: "Citi", location: "Mississauga, ON", posted: "2026-11-05", salary: null, fit: "Spring Boot, microservices, Azure + AWS, Docker, Agile; 6–8 yrs", gaps: "Banking; Kafka + Kubernetes" },
+  { id: "4484694646", match: "Strong", title: "Lead Java Developer", company: "Tekshapers", location: "Toronto, ON", posted: "2026-11-03", salary: null, fit: "Spring Boot microservices, Azure + AWS, Docker, Jenkins, lead role", gaps: "Kafka, Kubernetes" },
+  { id: "4486536058", match: "Good", title: "Senior Java Developer – Spring Boot, Microservices, Kafka & MongoDB", company: "Astra-North Infoteck", location: "Mississauga, ON", posted: "2026-10-27", salary: null, fit: "Senior Spring Boot microservices on AWS; 12 yrs asked – matches 13+ yrs", gaps: "Kafka + MongoDB" },
+  { id: "4486922351", match: "Good", title: "Senior Java Engineering Lead", company: "Citi", location: "Mississauga, ON (Hybrid)", posted: "2026-11-05", salary: null, fit: "Lead role, Java microservices; 10+ yrs", gaps: "Banking; Kafka" },
+  { id: "4473056985", match: "Good", title: "Senior Java Developer, TD Securities", company: "TD", location: "Toronto, ON", posted: "2026-11-10", salary: "$102,200 – $125,000", fit: "Java microservices, Azure + AWS, Jenkins, React, Agile; 7+ yrs", gaps: "Capital-markets domain; Kafka" },
+  { id: "4462481588", match: "Good", title: "Senior Java Full Stack Engineer, TD Securities", company: "TD", location: "Toronto, ON", posted: "2026-11-07", salary: "$126,800 – $164,100", fit: "Spring Boot microservices + React, Agile, lead duties", gaps: "Capital-markets domain" },
+  { id: "4486909710", match: "Good", title: "Senior Java Backend Engineer", company: "Citi", location: "Mississauga, ON (Hybrid)", posted: "2026-11-05", salary: null, fit: "Microservices, Azure + AWS, Docker, React, Agile; 10 yrs", gaps: "Kafka, Kubernetes" },
+  { id: "4479079308", match: "Good", title: "Lead Senior Software Engineer", company: "RBC", location: "Toronto, ON", posted: "2026-11-04", salary: null, fit: "Lead role, Java microservices, Agile; 10+ yrs", gaps: "Kafka, Kubernetes" },
+  { id: "4479175546", match: "Good", title: "Java Tech Lead", company: "Tata Consultancy Services", location: "Mississauga, ON", posted: "2026-10-15", salary: "CA$100,000 – $120,000", fit: "Tech lead, Spring Boot microservices, React, Agile", gaps: "Kafka; posting ~4 weeks old" },
+  { id: "4482225065", match: "Good", title: "Technology Lead – Core Java", company: "Infosys", location: "Mississauga, ON", posted: "2026-10-27", salary: "$92,740 – $123,375", fit: "Spring Boot microservices, Docker, React, Agile, lead", gaps: "Kubernetes; salary on the lower side" },
+  { id: "4479136501", match: "Good", title: "Sr Java Developer", company: "Tata Consultancy Services", location: "Toronto, ON", posted: "2026-10-15", salary: "CA$90,000 – $110,000", fit: "Spring Boot microservices, lead duties", gaps: "Salary below their level" },
+  { id: "4479385888", match: "Good", title: "Senior Java Software Engineer", company: "Intellect Design Arena", location: "Toronto, ON (Onsite)", posted: "2026-10-16", salary: "CA$110,000 – $120,000", fit: "Spring Boot microservices, Azure + AWS, Agile; 11 yrs", gaps: "Fintech; Kafka; onsite" },
+  { id: "4487310041", match: "Good", title: "Lead Java Developer", company: "Iris Software", location: "Toronto, ON", posted: "2026-11-06", salary: null, fit: "Spring Boot microservices, Azure + AWS, lead", gaps: "Contract; Kafka" },
+  { id: "4416968298", match: "Good", title: "Senior Java Developer (Future Opportunity)", company: "GFL Environmental", location: "Vaughan, ON", posted: "2026-11-08", salary: null, fit: "Spring Boot on AWS, Docker, Agile; 7 yrs", gaps: "Talent-pool posting; Kubernetes" },
+  { id: "4457658717", match: "Good", title: "Java Developer", company: "Priceline", location: "Toronto, ON (Hybrid)", posted: "2026-10-28", salary: "$100,000 – $120,000", fit: "Consumer e-commerce (travel); Spring Boot microservices on AWS, Docker", gaps: "Mid-level title (5+ yrs); Kafka, Kubernetes" },
+  { id: "4482718074", match: "Good", title: "Springboot Java Developer", company: "J&M Group", location: "Toronto, ON", posted: "2026-10-22", salary: null, fit: "Spring Boot on AWS, Agile; 8 yrs", gaps: "Recruiter posting" },
+  { id: "4480070479", match: "Good", title: "Lead Backend Developer", company: "TechDoQuest", location: "Brampton, ON (Onsite)", posted: "2026-10-22", salary: null, fit: "Spring Boot microservices on Azure, Docker, order processing; 10 yrs", gaps: "Contract; onsite; Kubernetes" },
+  { id: "4467912772", match: "Stretch", title: "Staff Backend Engineer, Customer Value Optimization", company: "HelloFresh", location: "Toronto, ON (Hybrid)", posted: "2026-10-29", salary: null, fit: "D2C e-commerce, lead-level; 7+ yrs", gaps: "Staff level; stack not Java-specific" },
+  { id: "4478180316", match: "Stretch", title: "Principal Commerce Technology Advisor", company: "Accenture", location: "Toronto, ON", posted: "2026-10-13", salary: "$172,100 – $323,600", fit: "Commerce platforms + microservices architecture; 10+ yrs", gaps: "Very senior advisory role; lists SFCC/Adobe/commercetools, not SAP" },
+  { id: "4487185311", match: "Stretch", title: "Principal Engineer – Retail Systems", company: "lululemon", location: "Vancouver, BC (Hybrid)", posted: "2026-11-09", salary: "$196,000 – $258,100", fit: "Retail systems engineering; 11+ yrs", gaps: "Requires relocation; principal level" },
+  { id: "4443163833", match: "Stretch", title: "Developer, SAP Integration", company: "Aecon Group", location: "Toronto, ON", posted: "2026-11-07", salary: "$90,000 – $105,000", fit: "SAP integration + Java on AWS; has SAP ERP integration experience", gaps: "Construction; salary below their level" },
+  { id: "4490004855", match: "Stretch", title: "Technical Delivery Manager", company: "Valtech", location: "Canada", posted: "2026-11-11", salary: null, fit: "Commerce delivery leadership, order flows, Agile/SAFe", gaps: "Salesforce Commerce Cloud, not SAP; PM-heavy" },
+];
+
+const ORDER = { Strong: 0, Good: 1, Stretch: 2 };
+const STORE_KEY = "friends-job-portal-v1";
+
+const SEED_FRIENDS = [
+  {
+    id: "friend-1",
+    name: "Friend #1",
+    headline: "Senior Software Engineer · Java / Spring Boot · SAP Commerce Cloud (Hybris)",
+    location: "Toronto, ON",
+    skills: "Java, Spring Boot, Microservices, SAP Commerce Cloud (Hybris CCv2), Azure, AWS, Docker, Jenkins, React, Agile/SAFe",
+    searchedOn: "2026-11-12",
+    jobs: SEED_JOBS.map(j => ({ ...j, url: `https://www.linkedin.com/jobs/view/${j.id}`, applied: false })),
+  },
+];
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { friends: SEED_FRIENDS, activeId: "friend-1" };
+}
+
+function fmtDate(d) {
+  if (!d) return "";
+  return new Date(d + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
+}
+
+const uid = () => Math.random().toString(36).slice(2, 10);
+
+function Modal({ title, onClose, children }) {
+  return (
+    <div className="overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-head"><h2>{title}</h2><button className="x" onClick={onClose}>×</button></div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function FriendForm({ initial, onSave, onCancel }) {
+  const [f, setF] = useState(initial || { name: "", headline: "", location: "", skills: "" });
+  const set = k => e => setF({ ...f, [k]: e.target.value });
+  return (
+    <form className="form" onSubmit={e => { e.preventDefault(); if (f.name.trim()) onSave(f); }}>
+      <label>Name or nickname*<input value={f.name} onChange={set("name")} placeholder="e.g. Priya" required /></label>
+      <label>Target role / headline<input value={f.headline} onChange={set("headline")} placeholder="e.g. Senior Java Developer" /></label>
+      <label>Preferred location<input value={f.location} onChange={set("location")} placeholder="e.g. Toronto, ON or Remote" /></label>
+      <label>Key skills<textarea rows="3" value={f.skills} onChange={set("skills")} placeholder="Comma-separated skills from their resume" /></label>
+      <div className="form-actions">
+        <button type="button" className="btn ghost" onClick={onCancel}>Cancel</button>
+        <button type="submit" className="btn">Save friend</button>
+      </div>
+    </form>
+  );
+}
+
+function JobForm({ onSave, onCancel }) {
+  const [j, setJ] = useState({ title: "", company: "", location: "", url: "", salary: "", match: "Good", fit: "", gaps: "", posted: new Date().toISOString().slice(0, 10) });
+  const set = k => e => setJ({ ...j, [k]: e.target.value });
+  return (
+    <form className="form" onSubmit={e => { e.preventDefault(); if (j.title.trim() && j.company.trim()) onSave(j); }}>
+      <div className="row2">
+        <label>Job title*<input value={j.title} onChange={set("title")} required /></label>
+        <label>Company*<input value={j.company} onChange={set("company")} required /></label>
+      </div>
+      <div className="row2">
+        <label>Location<input value={j.location} onChange={set("location")} /></label>
+        <label>Posted<input type="date" value={j.posted} onChange={set("posted")} /></label>
+      </div>
+      <label>Job link<input type="url" value={j.url} onChange={set("url")} placeholder="https://www.linkedin.com/jobs/view/…" /></label>
+      <div className="row2">
+        <label>Salary<input value={j.salary} onChange={set("salary")} /></label>
+        <label>Match
+          <select value={j.match} onChange={set("match")}>
+            <option>Strong</option><option>Good</option><option>Stretch</option>
+          </select>
+        </label>
+      </div>
+      <label>Why it fits<textarea rows="2" value={j.fit} onChange={set("fit")} /></label>
+      <label>Gaps / watch-outs<textarea rows="2" value={j.gaps} onChange={set("gaps")} /></label>
+      <div className="form-actions">
+        <button type="button" className="btn ghost" onClick={onCancel}>Cancel</button>
+        <button type="submit" className="btn">Add job</button>
+      </div>
+    </form>
+  );
+}
+
+function JobCard({ job, onToggle, onDelete }) {
+  return (
+    <article className={"job" + (job.applied ? " applied" : "")}>
+      <div>
+        <h3>{job.url ? <a href={job.url} target="_blank" rel="noopener noreferrer">{job.title}</a> : job.title}</h3>
+        <div className="meta">
+          <span><b>{job.company}</b></span>
+          {job.location && <span>📍 {job.location}</span>}
+          {job.posted && <span>🗓 {fmtDate(job.posted)}</span>}
+          {job.salary && <span className="sal">💰 {job.salary}</span>}
+        </div>
+      </div>
+      <span className={"badge " + job.match}>{job.match} match</span>
+      {(job.fit || job.gaps) && (
+        <div className="notes">
+          <div className="fit"><span className="lbl">Why it fits</span>{job.fit || "—"}</div>
+          <div className="gap"><span className="lbl">Gaps / watch-outs</span>{job.gaps || "—"}</div>
+        </div>
+      )}
+      <div className="actions">
+        <label className="toggle"><input type="checkbox" checked={!!job.applied} onChange={onToggle} /> Applied</label>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="btn ghost small" onClick={onDelete}>Remove</button>
+          {job.url && <a className="btn small" href={job.url} target="_blank" rel="noopener noreferrer">View posting ↗</a>}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function App() {
+  const [state, setState] = useState(loadState);
+  const [query, setQuery] = useState("");
+  const [matches, setMatches] = useState({ Strong: true, Good: true, Stretch: true });
+  const [sort, setSort] = useState("match");
+  const [hideApplied, setHideApplied] = useState(false);
+  const [modal, setModal] = useState(null); // "friend" | "edit" | "job" | "delete"
+
+  useEffect(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch {} }, [state]);
+
+  const friend = state.friends.find(f => f.id === state.activeId) || state.friends[0];
+
+  const updateFriend = (id, fn) => setState(s => ({ ...s, friends: s.friends.map(f => f.id === id ? fn(f) : f) }));
+
+  const visible = useMemo(() => {
+    if (!friend) return [];
+    const q = query.trim().toLowerCase();
+    return [...friend.jobs]
+      .filter(j => matches[j.match])
+      .filter(j => !hideApplied || !j.applied)
+      .filter(j => !q || [j.title, j.company, j.location, j.fit, j.gaps].join(" ").toLowerCase().includes(q))
+      .sort((a, b) => {
+        if (sort === "newest") return (b.posted || "").localeCompare(a.posted || "");
+        if (sort === "company") return a.company.localeCompare(b.company);
+        return ORDER[a.match] - ORDER[b.match] || (b.posted || "").localeCompare(a.posted || "");
+      });
+  }, [friend, query, matches, sort, hideApplied]);
+
+  const count = m => friend ? friend.jobs.filter(j => j.match === m).length : 0;
+  const appliedCount = friend ? friend.jobs.filter(j => j.applied).length : 0;
+
+  const linkedInSearch = friend
+    ? `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent((friend.headline || "").split("·")[0].trim())}&location=${encodeURIComponent(friend.location || "")}&f_TPR=r604800`
+    : "#";
+
+  return (
+    <div className="shell">
+      <aside className="side">
+        <div className="brand">🤝 Friends Job Help</div>
+        <p className="side-sub">Help your friends land their next role.</p>
+        <div className="friends">
+          {state.friends.map(f => (
+            <button key={f.id} className={"friend" + (f.id === friend?.id ? " on" : "")}
+              onClick={() => setState(s => ({ ...s, activeId: f.id }))}>
+              <span className="avatar">{f.name.trim()[0]?.toUpperCase() || "?"}</span>
+              <span className="fmeta"><b>{f.name}</b><small>{f.jobs.length} jobs · {f.jobs.filter(j => j.applied).length} applied</small></span>
+            </button>
+          ))}
+        </div>
+        <button className="btn full" onClick={() => setModal("friend")}>+ Add a friend</button>
+      </aside>
+
+      <main className="wrap">
+        {!friend ? (
+          <div className="empty">Add a friend to start tracking jobs for them.</div>
+        ) : (
+          <>
+            <header className="top">
+              <div>
+                <h1>{friend.name}</h1>
+                <p>{friend.headline || "No target role yet"}{friend.location ? ` · ${friend.location}` : ""}</p>
+                {friend.skills && <div className="skills">{friend.skills.split(",").map(s => s.trim()).filter(Boolean).map(s => <span key={s}>{s}</span>)}</div>}
+              </div>
+              <div className="top-actions">
+                <a className="btn ghost" href={linkedInSearch} target="_blank" rel="noopener noreferrer">Search LinkedIn ↗</a>
+                <button className="btn ghost" onClick={() => setModal("edit")}>Edit profile</button>
+                <button className="btn" onClick={() => setModal("job")}>+ Add job</button>
+              </div>
+            </header>
+
+            <section className="stats">
+              <div className="stat"><b>{friend.jobs.length}</b><span>Total matches</span></div>
+              <div className="stat"><b style={{ color: "var(--strong)" }}>{count("Strong")}</b><span>Strong</span></div>
+              <div className="stat"><b style={{ color: "var(--good)" }}>{count("Good")}</b><span>Good</span></div>
+              <div className="stat"><b style={{ color: "var(--stretch)" }}>{count("Stretch")}</b><span>Stretch</span></div>
+              <div className="stat"><b>{appliedCount}</b><span>Applied</span></div>
+            </section>
+
+            <section className="controls">
+              <input type="search" placeholder="Search title, company, skill (e.g. Azure, Hybris)…" value={query} onChange={e => setQuery(e.target.value)} />
+              <div className="chips">
+                {["Strong", "Good", "Stretch"].map(m => (
+                  <button key={m} className={"chip" + (matches[m] ? " on" : "")} onClick={() => setMatches(s => ({ ...s, [m]: !s[m] }))}>{m}</button>
+                ))}
+              </div>
+              <select value={sort} onChange={e => setSort(e.target.value)}>
+                <option value="match">Sort: best match</option>
+                <option value="newest">Sort: newest</option>
+                <option value="company">Sort: company A–Z</option>
+              </select>
+              <label className="toggle"><input type="checkbox" checked={hideApplied} onChange={e => setHideApplied(e.target.checked)} /> Hide applied</label>
+            </section>
+
+            <section className="list">
+              {visible.length === 0
+                ? <div className="empty">No jobs here yet. Use “+ Add job” or “Search LinkedIn”.</div>
+                : visible.map(j => (
+                    <JobCard key={j.id} job={j}
+                      onToggle={() => updateFriend(friend.id, f => ({ ...f, jobs: f.jobs.map(x => x.id === j.id ? { ...x, applied: !x.applied } : x) }))}
+                      onDelete={() => updateFriend(friend.id, f => ({ ...f, jobs: f.jobs.filter(x => x.id !== j.id) }))} />
+                  ))}
+            </section>
+
+            <footer>
+              Showing {visible.length} of {friend.jobs.length}. Data is saved in this browser only. Postings may close — check each link before applying.
+              {" "}<button className="linkbtn" onClick={() => setModal("delete")}>Remove this friend</button>
+            </footer>
+          </>
+        )}
+      </main>
+
+      {modal === "friend" && (
+        <Modal title="Add a friend" onClose={() => setModal(null)}>
+          <FriendForm onCancel={() => setModal(null)} onSave={f => {
+            const id = "friend-" + uid();
+            setState(s => ({ friends: [...s.friends, { ...f, id, jobs: [] }], activeId: id }));
+            setModal(null);
+          }} />
+        </Modal>
+      )}
+      {modal === "edit" && friend && (
+        <Modal title="Edit profile" onClose={() => setModal(null)}>
+          <FriendForm initial={friend} onCancel={() => setModal(null)} onSave={f => { updateFriend(friend.id, old => ({ ...old, ...f })); setModal(null); }} />
+        </Modal>
+      )}
+      {modal === "job" && friend && (
+        <Modal title={`Add a job for ${friend.name}`} onClose={() => setModal(null)}>
+          <JobForm onCancel={() => setModal(null)} onSave={j => { updateFriend(friend.id, f => ({ ...f, jobs: [...f.jobs, { ...j, id: uid(), applied: false }] })); setModal(null); }} />
+        </Modal>
+      )}
+      {modal === "delete" && friend && (
+        <Modal title={`Remove ${friend.name}?`} onClose={() => setModal(null)}>
+          <p>This deletes their profile and all {friend.jobs.length} saved jobs from this browser.</p>
+          <div className="form-actions">
+            <button className="btn ghost" onClick={() => setModal(null)}>Cancel</button>
+            <button className="btn danger" onClick={() => {
+              setState(s => { const friends = s.friends.filter(f => f.id !== friend.id); return { friends, activeId: friends[0]?.id }; });
+              setModal(null);
+            }}>Remove</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
