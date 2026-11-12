@@ -59,7 +59,42 @@ describe("App filtering and search", () => {
     expect(cards()).toHaveLength(62);
     const saved = JSON.parse(localStorage.getItem(STORE_KEY)!);
     const job = saved.friends[0].jobs.find((j: { title: string }) => j.title === "Platform Engineer");
-    expect(job).toMatchObject({ id: "9999999999", url: "https://www.linkedin.com/jobs/view/9999999999" });
+    expect(job).toMatchObject({ id: "9999999999", url: "https://www.linkedin.com/jobs/view/9999999999", source: "LinkedIn" });
+  });
+
+  it("shows a source tag on each card and filters by source", async () => {
+    const { user, cards } = setup();
+    const ctc = cards().find(c => c.getAttribute("aria-label") === "Solutions Architect at Canadian Tire Corporation")!;
+    expect(within(ctc).getByText("LinkedIn")).toBeInTheDocument();
+
+    const source = screen.getByRole("combobox", { name: "Filter by source" });
+    expect(within(source).getAllByRole("option").map(o => o.textContent)).toEqual([
+      "All sources",
+      "LinkedIn (45)",
+      "Indeed (6)",
+      "Eluta (10)",
+    ]);
+    await user.selectOptions(source, "Indeed");
+    expect(cards()).toHaveLength(6);
+    expect(cards().every(c => within(c).queryByText("Indeed"))).toBe(true);
+
+    await user.selectOptions(source, "Eluta");
+    await user.type(screen.getByRole("searchbox", { name: "Search jobs" }), "citi");
+    expect(cards()).toHaveLength(3);
+  });
+
+  it("lets the Add-job form override the detected source", async () => {
+    const { user } = setup();
+    await user.click(screen.getByRole("button", { name: "+ Add job" }));
+    const dialog = screen.getByRole("dialog");
+    await user.type(within(dialog).getByLabelText("Job link"), "https://careers.example.com/jobs/42");
+    await user.type(within(dialog).getByLabelText("Job title*"), "Commerce Architect");
+    await user.type(within(dialog).getByLabelText("Company*"), "Example Co");
+    await user.selectOptions(within(dialog).getByLabelText("Source"), "Company site");
+    await user.click(within(dialog).getByRole("button", { name: "Add job" }));
+
+    const card = screen.getByRole("article", { name: "Commerce Architect at Example Co" });
+    expect(within(card).getByText("Company site")).toBeInTheDocument();
   });
 
   it("closes a modal with Escape", async () => {

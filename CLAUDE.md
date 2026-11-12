@@ -101,9 +101,10 @@ interface AppState { friends: Friend[]; activeId?: string; }
 1. **Status pipeline** instead of a single Applied flag: Saved → Applied → Interview → Offer / Rejected.
    Show it as a dropdown on each card and add a count per status to the stats row.
 2. **Import / export**: export all data as JSON (file download), and import a JSON or CSV file.
-   CSV columns: `title, company, location, posted, salary, url, match, fit, gaps`.
+   CSV columns: `title, company, location, posted, salary, url, match, fit, gaps`, plus an optional `source`.
 3. **Paste a LinkedIn URL** in the Add-job modal and pull the job id out of `/jobs/view/<id>` so the
    link is normalised.
+3a. **Source tag** on each job (LinkedIn, Indeed, Eluta, Glassdoor, Job Bank, Company site, Referral, Other). Detect it from the posting link, let the Add-job form override it, and add a "filter by source" dropdown.
 4. **Per-friend notes** (free text) and an optional resume file name/link field.
 5. **Keyboard and accessibility**: modals close on Esc, focus is trapped inside a modal, and all
    inputs have labels. Aim for WCAG AA contrast in both themes.

@@ -4,6 +4,9 @@ export const MATCHES: Match[] = ["Strong", "Good", "Stretch"];
 export type Status = "Saved" | "Applied" | "Interview" | "Offer" | "Rejected";
 export const STATUSES: Status[] = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 
+export type Source = "LinkedIn" | "Indeed" | "Eluta" | "Glassdoor" | "Job Bank" | "Company site" | "Referral" | "Other";
+export const SOURCES: Source[] = ["LinkedIn", "Indeed", "Eluta", "Glassdoor", "Job Bank", "Company site", "Referral", "Other"];
+
 export interface Job {
   id: string; // LinkedIn job id, or a generated uid for manual jobs
   title: string;
@@ -12,6 +15,8 @@ export interface Job {
   posted?: string; // ISO date, YYYY-MM-DD
   salary?: string | null;
   url?: string;
+  /** Where the posting was found. When missing, it is worked out from `url` (see utils/source.ts). */
+  source?: Source;
   match: Match;
   fit?: string;
   gaps?: string;

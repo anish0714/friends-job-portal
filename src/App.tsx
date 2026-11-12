@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useStore } from "./store/StoreProvider";
 import { seedState } from "./store/storage";
 import type { AppState } from "./store/types";
-import { DEFAULT_FILTERS, filterSortJobs, type Filters } from "./utils/filterSort";
+import { DEFAULT_FILTERS, filterSortJobs, sourceCounts, type Filters } from "./utils/filterSort";
 import { csvToJobs } from "./utils/csv";
 import { Sidebar } from "./components/Sidebar";
 import { FriendHeader } from "./components/FriendHeader";
@@ -55,7 +55,7 @@ export default function App() {
         }
         const jobs = csvToJobs(text);
         if (jobs.length === 0) {
-          setMessage(`No jobs found in ${file.name}. Expected columns: title, company, location, posted, salary, url, match, fit, gaps.`);
+          setMessage(`No jobs found in ${file.name}. Expected columns: title, company, location, posted, salary, url, match, fit, gaps (and optionally source).`);
           return;
         }
         dispatch({ type: "ADD_JOBS", friendId: friend.id, jobs });
@@ -97,7 +97,7 @@ export default function App() {
           <>
             <FriendHeader friend={friend} onEdit={() => setModal({ kind: "editFriend" })} onAddJob={() => setModal({ kind: "addJob" })} />
             <Stats jobs={friend.jobs} />
-            <Controls filters={filters} onChange={setFilters} />
+            <Controls filters={filters} onChange={setFilters} sources={sourceCounts(friend.jobs)} />
             <JobList
               jobs={visible}
               onStatus={(jobId, status) => dispatch({ type: "SET_STATUS", friendId: friend.id, jobId, status })}

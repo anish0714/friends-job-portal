@@ -1,7 +1,9 @@
 import type { JobInput, Match } from "../store/types";
 import { extractLinkedInJobId, normalizeJobUrl } from "./linkedin";
+import { parseSource } from "./source";
 
-export const CSV_COLUMNS = ["title", "company", "location", "posted", "salary", "url", "match", "fit", "gaps"] as const;
+/** `source` is optional; when it's missing the source is worked out from `url`. */
+export const CSV_COLUMNS = ["title", "company", "location", "posted", "salary", "url", "match", "fit", "gaps", "source"] as const;
 
 /** Minimal RFC 4180 parser: quoted fields, escaped quotes, commas and newlines inside quotes. */
 export function parseCsv(text: string): string[][] {
@@ -64,6 +66,7 @@ export function csvToJobs(text: string): JobInput[] {
         salary: col(row, "salary") || null,
         url: url ? normalizeJobUrl(url) : undefined,
         match: toMatch(col(row, "match")),
+        source: parseSource(col(row, "source")),
         fit: col(row, "fit") || undefined,
         gaps: col(row, "gaps") || undefined,
       };
