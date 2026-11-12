@@ -17,17 +17,17 @@ function setup() {
 }
 
 describe("App filtering and search", () => {
-  it("shows all 51 seed jobs", () => {
+  it("shows all 61 seed jobs", () => {
     const { cards } = setup();
-    expect(cards()).toHaveLength(51);
-    expect(screen.getByText(/Showing 51 of 51/)).toBeInTheDocument();
+    expect(cards()).toHaveLength(61);
+    expect(screen.getByText(/Showing 61 of 61/)).toBeInTheDocument();
   });
 
   it("combines search, match chips and hide-applied", async () => {
     const { user, cards } = setup();
 
     await user.type(screen.getByRole("searchbox", { name: "Search jobs" }), "citi");
-    expect(cards()).toHaveLength(4); // 1 Strong + 3 Good at Citi
+    expect(cards()).toHaveLength(7); // 1 Strong + 6 Good at Citi
 
     await user.click(screen.getByRole("button", { name: "Good" }));
     expect(screen.getByRole("button", { name: "Good" })).toHaveAttribute("aria-pressed", "false");
@@ -56,7 +56,7 @@ describe("App filtering and search", () => {
     await user.click(within(dialog).getByRole("button", { name: "Add job" }));
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(cards()).toHaveLength(52);
+    expect(cards()).toHaveLength(62);
     const saved = JSON.parse(localStorage.getItem(STORE_KEY)!);
     const job = saved.friends[0].jobs.find((j: { title: string }) => j.title === "Platform Engineer");
     expect(job).toMatchObject({ id: "9999999999", url: "https://www.linkedin.com/jobs/view/9999999999" });

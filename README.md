@@ -41,4 +41,4 @@ to GitHub Pages. Pull requests run `.github/workflows/ci.yml`.
 
 - `CLAUDE.md`: the project brief
 - `prototype.html`: the original single-file prototype used as the UI reference
-- `src/data/seed-data.json`: sample data (1 friend, 51 LinkedIn and Indeed postings across Toronto, the GTA and Kitchener-Waterloo-Cambridge). Bump its `version` when adding jobs so returning visitors get the new ones merged into their saved data
+- `src/data/seed-data.json`: sample data (1 friend, 61 LinkedIn, Indeed and Eluta.ca postings across Toronto, the GTA and Kitchener-Waterloo-Cambridge). Bump its `version` when adding jobs so returning visitors get the new ones merged into their saved data

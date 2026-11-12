@@ -21,6 +21,26 @@ describe("seed merge for returning visitors", () => {
     expect(merged.friends[0].searchedOn).toBe(seed.friends[0].searchedOn);
   });
 
+  it("fills in a missing salary but keeps a salary the user saved", () => {
+    const seed = seedState();
+    const withSalary = seed.friends[0].jobs.filter(j => j.salary).slice(0, 2);
+    expect(withSalary).toHaveLength(2);
+    const saved: AppState = {
+      friends: [
+        {
+          ...seed.friends[0],
+          jobs: [
+            { ...withSalary[0], salary: null },
+            { ...withSalary[1], salary: "$1 (my note)" },
+          ],
+        },
+      ],
+    };
+    const jobs = mergeSeed(saved, seed).friends[0].jobs;
+    expect(jobs[0].salary).toBe(withSalary[0].salary);
+    expect(jobs[1].salary).toBe("$1 (my note)");
+  });
+
   it("does not bring back a friend the user removed", () => {
     expect(mergeSeed({ friends: [] }).friends).toEqual([]);
   });
@@ -102,14 +122,14 @@ describe("reducer: jobs", () => {
 });
 
 describe("seed data", () => {
-  it("has Friend #1 with 51 jobs: 12 Strong, 32 Good, 7 Stretch", () => {
+  it("has Friend #1 with 61 jobs: 12 Strong, 41 Good, 8 Stretch", () => {
     const s = seedState();
     expect(s.friends[0].name).toBe("Friend #1");
     const jobs = s.friends[0].jobs;
-    expect(jobs).toHaveLength(51);
+    expect(jobs).toHaveLength(61);
     expect(jobs.filter(j => j.match === "Strong")).toHaveLength(12);
-    expect(jobs.filter(j => j.match === "Good")).toHaveLength(32);
-    expect(jobs.filter(j => j.match === "Stretch")).toHaveLength(7);
+    expect(jobs.filter(j => j.match === "Good")).toHaveLength(41);
+    expect(jobs.filter(j => j.match === "Stretch")).toHaveLength(8);
     expect(jobs.every(j => j.status === "Saved")).toBe(true);
   });
 });

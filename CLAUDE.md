@@ -66,7 +66,7 @@ interface Friend {
 interface AppState { friends: Friend[]; activeId?: string; }
 ```
 
-`seed-data.json` follows this shape. It has one friend and 51 real postings from LinkedIn and Indeed
+`seed-data.json` follows this shape. It has one friend and 61 real postings from LinkedIn, Indeed and Eluta.ca
 (Toronto, GTA and Waterloo region, searched 2026-11-12). Bump the top-level `version` whenever jobs are added so returning visitors get them merged in.
 
 ## 4. Features (v1, matches the prototype)
@@ -134,7 +134,7 @@ src/
 
 ## 8. Acceptance checklist
 
-- [ ] `npm run dev` shows Friend #1 with 51 jobs: 12 Strong, 32 Good, 7 Stretch.
+- [ ] `npm run dev` shows Friend #1 with 61 jobs: 12 Strong, 41 Good, 8 Stretch.
 - [ ] Adding, editing and removing friends and jobs works and survives a page reload.
 - [ ] Search, match chips, sort and "Hide applied" combine correctly.
 - [ ] Light and dark themes both look right. The layout works at 375px wide.

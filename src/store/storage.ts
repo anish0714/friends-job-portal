@@ -21,17 +21,26 @@ export function seedState(): AppState {
 }
 
 /**
- * Adds seed jobs the saved state doesn't have yet to the matching saved friends.
- * Saved jobs (and their statuses) are never changed or removed, and friends the user deleted are not restored.
+ * Adds seed jobs the saved state doesn't have yet to the matching saved friends, and fills in a salary
+ * on saved jobs that have none. Statuses, notes and anything else the user saved are never changed or
+ * removed, and friends the user deleted are not restored.
  */
 export function mergeSeed(saved: AppState, seedData: AppState = seedState()): AppState {
   const friends = saved.friends.map(f => {
     const fromSeed = seedData.friends.find(s => s.id === f.id);
     if (!fromSeed) return f;
+    const seedById = new Map(fromSeed.jobs.map(j => [j.id, j]));
+    let changed = false;
+    const jobs = f.jobs.map(j => {
+      const salary = seedById.get(j.id)?.salary;
+      if (j.salary || !salary) return j;
+      changed = true;
+      return { ...j, salary };
+    });
     const have = new Set(f.jobs.map(j => j.id));
     const added = fromSeed.jobs.filter(j => !have.has(j.id)).map(normalizeJob);
     const searchedOn = [f.searchedOn, fromSeed.searchedOn].filter(Boolean).sort().pop();
-    return added.length || searchedOn !== f.searchedOn ? { ...f, searchedOn, jobs: [...f.jobs, ...added] } : f;
+    return changed || added.length || searchedOn !== f.searchedOn ? { ...f, searchedOn, jobs: [...jobs, ...added] } : f;
   });
   return { ...saved, friends };
 }
